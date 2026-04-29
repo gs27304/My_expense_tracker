@@ -9,7 +9,13 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173', // Vite development server
+    process.env.FRONTEND_URL // Vercel deployment URL
+  ].filter(Boolean), // Filters out undefined if not set in .env yet
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
