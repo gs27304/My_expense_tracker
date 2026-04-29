@@ -1,6 +1,9 @@
 import React from 'react';
 
-const ExpenseList = ({ expenses }) => {
+const ExpenseList = ({ expenses, selectedCategory, onCategoryChange }) => {
+  const categories = [
+    'Food', 'Transportation', 'Housing', 'Utilities', 'Entertainment', 'Healthcare', 'Shopping', 'Other'
+  ];
   if (!expenses || expenses.length === 0) {
     return (
       <div className="card" style={{ textAlign: 'center', padding: '3rem 2rem' }}>
@@ -33,7 +36,22 @@ const ExpenseList = ({ expenses }) => {
 
   return (
     <div className="card">
-      <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', color: 'var(--primary-color)' }}>Expense History</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <h2 style={{ fontSize: '1.5rem', color: 'var(--primary-color)', margin: 0 }}>Expense History</h2>
+        
+        <select 
+          className="form-control" 
+          style={{ width: 'auto', minWidth: '180px', margin: 0 }}
+          value={selectedCategory || ''}
+          onChange={(e) => onCategoryChange && onCategoryChange(e.target.value)}
+        >
+          <option value="">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
+      </div>
+
       <ul className="expense-list">
         {expenses.map((expense) => (
           <li key={expense._id} className="expense-item">
