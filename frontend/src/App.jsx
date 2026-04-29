@@ -37,7 +37,18 @@ function App() {
         <p>Keep track of your spending with accuracy</p>
       </header>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <span>{error}</span>
+          <button 
+            className="btn" 
+            onClick={() => loadExpenses()} 
+            style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.85rem', margin: 0 }}
+          >
+            Retry Connection
+          </button>
+        </div>
+      )}
 
       {/* Passing loadExpenses to refresh the list automatically when a new expense is added */}
       <ExpenseForm onExpenseAdded={loadExpenses} />
