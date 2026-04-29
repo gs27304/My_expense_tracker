@@ -22,6 +22,7 @@ const createExpense = async (req, res) => {
     const decimalAmount = mongoose.Types.Decimal128.fromString(amount.toString());
 
     const expense = await Expense.create({
+      user: req.user.id,
       amount: decimalAmount,
       category,
       description,
@@ -50,8 +51,8 @@ const getExpenses = async (req, res) => {
   try {
     const { category, sort } = req.query;
 
-    // Filtering
-    let query = {};
+    // Filtering - ALWAYS scope to the authenticated user
+    let query = { user: req.user.id };
     if (category) {
       query.category = category;
     }

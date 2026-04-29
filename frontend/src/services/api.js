@@ -34,3 +34,36 @@ export const createExpense = async (data) => {
   const response = await api.post('/api/expenses', payload);
   return response.data;
 };
+
+/**
+ * Register a new user
+ * @param {Object} userData - { email, password }
+ * @returns {Promise<Object>} User data and token
+ */
+export const registerUser = async (userData) => {
+  const response = await api.post('/api/auth/register', userData);
+  if (response.data.token) {
+    localStorage.setItem('token', response.data.token);
+  }
+  return response.data;
+};
+
+/**
+ * Login an existing user
+ * @param {Object} credentials - { email, password }
+ * @returns {Promise<Object>} User data and token
+ */
+export const loginUser = async (credentials) => {
+  const response = await api.post('/api/auth/login', credentials);
+  if (response.data.token) {
+    localStorage.setItem('token', response.data.token);
+  }
+  return response.data;
+};
+
+/**
+ * Logout user by clearing the token
+ */
+export const logoutUser = () => {
+  localStorage.removeItem('token');
+};
