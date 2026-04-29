@@ -43,6 +43,30 @@ const createExpense = async (req, res) => {
   }
 };
 
+// @desc    Get all expenses
+// @route   GET /api/expenses
+// @access  Public
+const getExpenses = async (req, res) => {
+  try {
+    const expenses = await Expense.find().sort({ date: -1 });
+    
+    // Map the documents to include a specific `created_at` field as requested
+    const formattedExpenses = expenses.map(expense => {
+      const expenseObj = expense.toObject();
+      return {
+        ...expenseObj,
+        created_at: expense.createdAt
+      };
+    });
+
+    res.status(200).json(formattedExpenses);
+  } catch (error) {
+    console.error('Error fetching expenses:', error);
+    res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+};
+
 module.exports = {
-  createExpense
+  createExpense,
+  getExpenses
 };
