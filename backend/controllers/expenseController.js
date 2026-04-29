@@ -48,7 +48,23 @@ const createExpense = async (req, res) => {
 // @access  Public
 const getExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find().sort({ date: -1 });
+    const { category, sort } = req.query;
+
+    // Filtering
+    let query = {};
+    if (category) {
+      query.category = category;
+    }
+
+    // Sorting
+    let sortObj = { date: -1 }; // Default to newest first
+    if (sort === 'date_asc') {
+      sortObj = { date: 1 };
+    } else if (sort === 'date_desc') {
+      sortObj = { date: -1 };
+    }
+
+    const expenses = await Expense.find(query).sort(sortObj);
     
     // Map the documents to include a specific `created_at` field as requested
     const formattedExpenses = expenses.map(expense => {
