@@ -46,3 +46,70 @@ This application is configured for a multi-platform deployment (Railway + Vercel
 4. Add the following **Environment Variable** in the Vercel dashboard:
    - `VITE_API_URL`: Your Railway backend domain (e.g., `https://backend-production.up.railway.app`).
 5. Deploy! Vercel will automatically read the `vercel.json` included in this repo to handle SPA routing.
+
+---
+
+##  Design Decisions
+
+- **MongoDB with Decimal128** was chosen to ensure accurate financial calculations.
+- **JWT Authentication** is used to securely manage user sessions.
+- **Idempotency Key Implementation** ensures that duplicate requests (due to retries, refresh, or double-click) do not create duplicate expense entries.
+- **Server-side filtering and sorting** ensures consistent and reliable data handling across clients.
+- **Separation of frontend and backend** allows independent deployment and scalability.
+
+---
+
+##  Idempotency & Reliability
+
+To handle real-world issues like:
+- Page refresh after submit
+- Multiple button clicks
+- Network retries
+
+This app uses an **idempotency key**:
+
+- Each expense request includes a unique key
+- Backend checks:
+  - If key exists → return existing record
+  - Else → create new record
+
+This guarantees:
+- No duplicate expenses  
+- Safe retries  
+- Consistent data  
+
+---
+
+##  Trade-offs
+
+- Pagination is not implemented to keep the system simple
+- UI styling is minimal to focus on correctness
+- No advanced analytics (like category breakdown)
+
+---
+
+##  Edge Cases Handled
+
+- Duplicate submissions   
+- Page refresh after submit   
+- Network retries  
+- Invalid input validation   
+- Unauthorized access   
+
+---
+
+##  Key Highlights
+
+- Production-ready backend design
+- Clean and modular frontend architecture
+- Real-world reliability handling
+- Strong focus on data correctness
+
+---
+
+## 
+
+**Gajendra Singh**  
+ECE @ IIITDM Jabalpur
+
+---
