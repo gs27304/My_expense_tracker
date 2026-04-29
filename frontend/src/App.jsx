@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -6,27 +7,41 @@ import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-  // Check if a token exists in localStorage on initial load
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+
+  // 🔥 Sync auth state across tabs / refresh
+  useEffect(() => {
+    const syncAuth = () => {
+      setIsAuthenticated(!!localStorage.getItem('token'));
+    };
+
+    window.addEventListener('storage', syncAuth);
+
+    return () => window.removeEventListener('storage', syncAuth);
+  }, []);
 
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
+
         <Route 
           path="/login" 
           element={
-            isAuthenticated ? <Navigate to="/" replace /> : <Login setIsAuthenticated={setIsAuthenticated} />
-          } 
-        />
-        <Route 
-          path="/register" 
-          element={
-            isAuthenticated ? <Navigate to="/" replace /> : <Register setIsAuthenticated={setIsAuthenticated} />
+            isAuthenticated
+              ? <Navigate to="/" replace />
+              : <Login setIsAuthenticated={setIsAuthenticated} />
           } 
         />
 
-        {/* Protected Routes */}
+        <Route 
+          path="/register" 
+          element={
+            isAuthenticated
+              ? <Navigate to="/" replace />
+              : <Register setIsAuthenticated={setIsAuthenticated} />
+          } 
+        />
+
         <Route 
           path="/" 
           element={
@@ -35,9 +50,9 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        
-        {/* Catch-all route redirects to home */}
+
         <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </Router>
   );
